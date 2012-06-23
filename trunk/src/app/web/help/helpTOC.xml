@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE toc
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/toc_1_0.dtd">
+<toc version="1.0">
+
+    <tocitem text="Help" target="welcome" image="chapter" >
+<!--        <tocitem text="Welcome to the Nurflugel PictureBrowser"         target="welcome"            image="topic"/>-->
+        <tocitem text="What exactly is Nurflugel Picture Browser?"      target="what"               image="topic">
+            <tocitem text="Features"                                    target="features"           image="topic"/>
+        </tocitem>
+
+        <tocitem text="Using Nurflugel Picture Browser"                                             image="topic">
+            <tocitem text="Getting started"                             target="starting"           image="topic"/>
+            <tocitem text="What does the final result look like?"       target="output"             image="topic"/>
+            <tocitem text="Selecting the directory"                     target="selectingDir"       image="topic"/>
+            <tocitem text="Creating web pages from media collections"   target="creating"           image="topic"/>
+            <tocitem text="Adding content"                              target="addingContent"      image="topic"/>
+            <tocitem text="Moving thumbnails around"                    target="moving"             image="topic"/>
+            <tocitem text="Supported file formats"                      target="supportedFormats"   image="topic"/>
+            <tocitem text="Web page output settings"                    target="settings"           image="topic"/>
+            <tocitem text="EXIF Information"                            target="exif"               image="topic"/>
+        </tocitem>
+        <tocitem text="Contacting me"                                   target="feedback"           image="topic"/>
+
+    </tocitem>
+</toc>
