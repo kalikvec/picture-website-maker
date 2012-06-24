@@ -8,5 +8,5 @@ apply from: 'master-gradle/master-webstart-build.gradle'
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
-mainClassName = "com.nurflugel.ivybrowser.ui.IvyBrowserMainFrame"
+mainClassName = "com.nurflugel.picturebrowserservlet.gui.MainFrame"
 

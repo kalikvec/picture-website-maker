@@ -7,7 +7,8 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.*;
+import java.util.List;
 
 /**
  * Class GifDecoder - Decodes a GIF file into one or more frames.<br>
@@ -30,6 +31,7 @@ import java.util.ArrayList;
  * @author   Kevin Weiner, FM Software; LZW decoder adapted from John Cristy's ImageMagick.
  * @version  1.01 July 2001
  */
+@SuppressWarnings("NumericCastThatLosesPrecision")
 public class GifDecoder
 {
   /** File read status: No errors. */
@@ -39,49 +41,49 @@ public class GifDecoder
   public static final int STATUS_FORMAT_ERROR = 1;
 
   /** File read status: Unable to open source. */
-  public static final int       STATUS_OPEN_ERROR = 2;
-  protected static final int    MAX_STACK_SIZE    = 4096;           // max decoder pixel stack size
-  protected BufferedInputStream in;
-  protected int                 status;
-  protected int                 width;                              // full image width
-  protected int                 height;                             // full image height
-  protected boolean             gctFlag;                            // global color table used
-  protected int                 gctSize;                            // size of global color table
-  protected int                 loopCount         = 1;              // iterations; 0 = repeat forever
-  protected int[]               gct;                                // global color table
-  protected int[]               lct;                                // local color table
-  protected int[]               act;                                // active color table
-  protected int                 bgIndex;                            // background color index
-  protected int                 bgColor;                            // background color
-  protected int                 lastBgColor;                        // previous bg color
-  protected int                 pixelAspect;                        // pixel aspect ratio
-  protected boolean             lctFlag;                            // local color table flag
-  protected boolean             interlace;                          // interlace flag
-  protected int                 lctSize;                            // local color table size
-  protected int                 ix;                                 // current image rectangle
-  protected int                 iy;                                 // current image rectangle
-  protected int                 iw;                                 // current image rectangle
-  protected int                 ih;                                 // current image rectangle
-  protected Rectangle           lastRect;                           // last image rect
-  protected BufferedImage       image;                              // current frame
-  protected BufferedImage       lastImage;                          // previous frame
-  protected byte[]              block             = new byte[256];  // current data block
-  protected int                 blockSize         = 0;              // block size
+  public static final int     STATUS_OPEN_ERROR = 2;
+  private static final int    MAX_STACK_SIZE    = 4096;           // max decoder pixel stack size
+  private BufferedInputStream in;
+  private int                 status;
+  private int                 width;                              // full image width
+  private int                 height;                             // full image height
+  private boolean             gctFlag;                            // global color table used
+  private int                 gctSize;                            // size of global color table
+  private int                 loopCount         = 1;              // iterations; 0 = repeat forever
+  private int[]               gct;                                // global color table
+  private int[]               lct;                                // local color table
+  private int[]               act;                                // active color table
+  private int                 bgIndex;                            // background color index
+  private int                 bgColor;                            // background color
+  private int                 lastBgColor;                        // previous bg color
+  private int                 pixelAspect;                        // pixel aspect ratio
+  private boolean             lctFlag;                            // local color table flag
+  private boolean             interlace;                          // interlace flag
+  private int                 lctSize;                            // local color table size
+  private int                 ix;                                 // current image rectangle
+  private int                 iy;                                 // current image rectangle
+  private int                 iw;                                 // current image rectangle
+  private int                 ih;                                 // current image rectangle
+  private Rectangle           lastRect;                           // last image rect
+  private BufferedImage       image;                              // current frame
+  private BufferedImage       lastImage;                          // previous frame
+  private byte[]              block             = new byte[256];  // current data block
+  private int                 blockSize         = 0;              // block size
 
   // last graphic control extension info
-  protected int     dispose      = 0;      // 0=no action; 1=leave in place; 2=restore to bg; 3=restore to prev
-  protected int     lastDispose  = 0;
-  protected boolean transparency = false;  // use transparent color
-  protected int     delay        = 0;      // delay in milliseconds
-  protected int     transIndex;            // transparent color index
+  private int     dispose      = 0;      // 0=no action; 1=leave in place; 2=restore to bg; 3=restore to prev
+  private int     lastDispose  = 0;
+  private boolean transparency = false;  // use transparent color
+  private int     delay        = 0;      // delay in milliseconds
+  private int     transIndex;            // transparent color index
 
   // LZW decoder working arrays
-  protected short[]             prefix;
-  protected byte[]              suffix;
-  protected byte[]              pixelStack;
-  protected byte[]              pixels;
-  protected ArrayList<GifFrame> frames;  // frames read from current file
-  protected int                 frameCount;
+  private short[]        prefix;
+  private byte[]         suffix;
+  private byte[]         pixelStack;
+  private byte[]         pixels;
+  private List<GifFrame> frames;  // frames read from current file
+  private int            frameCount;
 
   /** Creates a new GifDecoder object. */
   public GifDecoder() {}
@@ -91,7 +93,7 @@ public class GifDecoder
   {
     read(bufferedImputStream);
 
-    int           n     = getFrameCount();
+    int           n     = frameCount;
     BufferedImage frame = null;
 
     if (n > 0)
@@ -204,7 +206,6 @@ public class GifDecoder
   protected int[] readColorTable(int ncolors)
   {
     int    nbytes = 3 * ncolors;
-    int[]  tab    = null;
     byte[] c      = new byte[nbytes];
     int    n      = 0;
 
@@ -213,6 +214,8 @@ public class GifDecoder
       n = in.read(c);
     }
     catch (IOException e) {}
+
+    int[] tab = null;
 
     if (n < nbytes)
     {
@@ -271,14 +274,14 @@ public class GifDecoder
             case 0xff:   // application extension
               readBlock();
 
-              String app = "";
+              StringBuilder app = new StringBuilder();
 
               for (int i = 0; i < 11; i++)
               {
-                app += (char) block[i];
+                app.append((char) block[i]);
               }
 
-              if (app.equals("NETSCAPE2.0"))
+              if (app.toString().equals("NETSCAPE2.0"))
               {
                 readNetscapeExt();
               }
@@ -378,25 +381,7 @@ public class GifDecoder
   /** Decodes LZW image data into pixel array. Adapted from John Cristy's ImageMagick. */
   protected void decodeImageData()
   {
-    int NullCode           = -1;
-    int npix               = iw * ih;
-    int available;
-    int clear;
-    int code_mask;
-    int code_size;
-    int end_of_information;
-    int in_code;
-    int old_code;
-    int bits;
-    int code;
-    int count;
-    int i;
-    int datum;
-    int data_size;
-    int first;
-    int top;
-    int bi;
-    int pi;
+    int npix = iw * ih;
 
     if ((pixels == null) || (pixels.length < npix))
     {
@@ -419,13 +404,15 @@ public class GifDecoder
     }
 
     // Initialize GIF data stream decoder.
-    data_size          = read();
-    clear              = 1 << data_size;
-    end_of_information = clear + 1;
-    available          = clear + 2;
-    old_code           = NullCode;
-    code_size          = data_size + 1;
-    code_mask          = (1 << code_size) - 1;
+    int data_size          = read();
+    int clear              = 1 << data_size;
+    int end_of_information = clear + 1;
+    int available          = clear + 2;
+    int NullCode           = -1;
+    int old_code           = NullCode;
+    int code_size          = data_size + 1;
+    int code_mask          = (1 << code_size) - 1;
+    int code;
 
     for (code = 0; code < clear; code++)
     {
@@ -434,13 +421,14 @@ public class GifDecoder
     }
 
     // Decode GIF pixel stream.
-    datum = 0;
-    bits  = 0;
-    count = 0;
-    first = 0;
-    top   = 0;
-    pi    = 0;
-    bi    = 0;
+    int datum = 0;
+    int bits  = 0;
+    int count = 0;
+    int first = 0;
+    int top   = 0;
+    int pi    = 0;
+    int bi    = 0;
+    int i;
 
     for (i = 0; i < npix;)
     {
@@ -498,7 +486,7 @@ public class GifDecoder
           continue;
         }
 
-        in_code = code;
+        int in_code = code;
 
         if (code == available)
         {

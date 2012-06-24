@@ -1,6 +1,6 @@
 ext.libraryVersions = [
 //    ant:                 '1.8.4',
-//    asm:                 '3.1',
+    asm:                 '3.1',
     buildtasks:          '1.0-SNAPSHOT',
     commons_collections: '3.2.1',
     commons_io:          '2.2',

@@ -15,7 +15,6 @@ public class TagsAndStuff
   public static final String VIDEO_ICON_JPG                  = "videoicon1.jpg";
   public static final String VIDEO_ICON                      = VIDEO_ICON_JPG;
   public static final String SOUND_ICON                      = SOUND_ICON_JPG;
-  static String              defaultDirName                  = "F:\\Dougs Files\\Dougs Pictures\\Bahamas\\test";
   static String              metadataTag                     = "Metadata";
   static String              metadataFileName                = "metadata.xml";
   public static final String picTagElement                   = "pic";
@@ -46,11 +45,6 @@ public class TagsAndStuff
   static String              lastDirVisitedTag               = "lastDirVisited";  // todo
   public static final String fontNameTag                     = "fontName";
   public static final String fontSizeTag                     = "fontSize";
-  public static final String LAST_VISITED_DIR                = "LAST_VISITED_DIR";
-  public static final String NUM_COLS                        = "NUM_COLS";
-  public static final String NUM_ROWS                        = "NUM_ROWS";
-  public static final String SHOW_EXIF_INFO                  = "SHOW_EXIF_INFO";
-  public static final String SHOW_PREVIEWS                   = "SHOW_PREVIEWS";
 
   private TagsAndStuff() {}
 }

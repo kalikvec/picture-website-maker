@@ -127,4 +127,33 @@ public class File implements Comparable, Serializable
   {
     this.url = url;
   }
+
+  @Override
+  public boolean equals(Object o)
+  {
+    if (this == o)
+    {
+      return true;
+    }
+
+    if ((o == null) || (getClass() != o.getClass()))
+    {
+      return false;
+    }
+
+    File file1 = (File) o;
+
+    if (!file.equals(file1.file))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  @Override
+  public int hashCode()
+  {
+    return file.hashCode();
+  }
 }

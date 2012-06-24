@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.StringTokenizer;
 import static java.io.File.separator;
 import static javax.swing.JFileChooser.APPROVE_OPTION;
+import static javax.swing.JFileChooser.DIRECTORIES_ONLY;
 
 class BreadCrumbPanel extends JPanel implements ActionListener
 {
@@ -40,7 +41,7 @@ class BreadCrumbPanel extends JPanel implements ActionListener
       fileChooser.setCurrentDirectory(new File(lastVisitedDir));
     }
 
-    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    fileChooser.setFileSelectionMode(DIRECTORIES_ONLY);
 
     int returnVal = fileChooser.showOpenDialog(theFrame);
 

@@ -3,7 +3,7 @@
  */
 package com.nurflugel.picturebrowserservlet.domain;
 
-import com.nurflugel.picturebrowserservlet.UtilMethods;
+import com.nurflugel.picturebrowserservlet.util.UtilMethods;
 import com.nurflugel.picturebrowserservlet.gui.SortCriteria;
 import java.io.File;
 
