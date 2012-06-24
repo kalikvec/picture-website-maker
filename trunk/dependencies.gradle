@@ -1,21 +1,21 @@
 ext.libraryVersions = [
-//    ant:                 '1.8.4',
-    asm:                 '3.1',
+    jdom:                '1.0',
+    glazedLists:         '1.8.0',
+    xstream:             '1.2',
+    svnkit:              '1.7.4-v1',
+    jtidy:               '04aug2000r7-dev',
+    version_tool:        '1.1.4_fixed',
     buildtasks:          '1.0-SNAPSHOT',
+    commons_logging:     '1.0.4',
+    commons_lang:        '2.4',
     commons_collections: '3.2.1',
     commons_io:          '2.2',
-    commons_lang:        '2.4',
-    commons_logging:     '1.0.4',
     forms_rt:            '11.0.3',
-//    glazedLists:         '1.8.0',
-    jdom:                '1.0',
-    jhall:               '2.0.6',
-//    jtidy:               '04aug2000r7-dev',
     log4j:               '1.2.15',
-//    svnkit:              '1.7.4-v1',
     testng:              '6.4',
-    version_tool:        '1.1.4_fixed',
-    xstream:             '1.2'
+    asm:                 '3.1',
+    jhall:               '2.0.6',
+    ant:                 '1.8.4'
 ]
 
 configurations {
@@ -25,10 +25,7 @@ configurations {
 dependencies {
 
     compile 'org.jdom:jdom:'+                       libraryVersions.jdom,
-//            'ca.odell.glazedlists:jdk_1.5:'+        libraryVersions.glazedLists,
-            'org.codehaus.xstream:xstream:'+        libraryVersions.xstream,
-//            'org.tmatesoft.svnkit:svnkit:'+         libraryVersions.svnkit,
-//            'w3c:jtidy:'+                           libraryVersions.jtidy,
+            'org.tmatesoft.svnkit:svnkit:'+         libraryVersions.svnkit,
             'com.ryangrier.ant:version_tool:'+      libraryVersions.version_tool,
             'com.nurflugel:buildtasks:'+            libraryVersions.buildtasks,
             'org.apache:commons-logging:'+          libraryVersions.commons_logging,
@@ -38,14 +35,14 @@ dependencies {
             'com.intellij:forms_rt:'+               libraryVersions.forms_rt,
             'org.apache:log4j:'+                    libraryVersions.log4j,
             'org.testng:testng:'+                   libraryVersions.testng,
-//            'org.objectweb.asm:asm:'+               libraryVersions.asm,
+            'org.objectweb.asm:asm:'+               libraryVersions.asm,
             'javax.help:jhall:'+                    libraryVersions.jhall
+//  ,
+//         'org.springframework:spring-aop:3.1.1.RELEASE'
+
 
     runtime 'org.jdom:jdom:'+                   libraryVersions.jdom,
-//            'ca.odell.glazedlists:jdk_1.5:'+    libraryVersions.glazedLists,
-//            'org.codehaus.xstream:xstream:'+    libraryVersions.xstream,
-//            'org.tmatesoft.svnkit:svnkit:'+     libraryVersions.svnkit,
-//            'w3c:jtidy:'+                       libraryVersions.jtidy,
+            'org.tmatesoft.svnkit:svnkit:'+     libraryVersions.svnkit,
             'org.apache:commons-logging:'+      libraryVersions.commons_logging,
             'org.apache:commons-lang:'+         libraryVersions.commons_lang,
             'org.apache:commons-collections:'+  libraryVersions.commons_collections,
@@ -55,12 +52,13 @@ dependencies {
             'org.testng:testng:'+               libraryVersions.testng,
             'org.objectweb.asm:asm:'+           libraryVersions.asm,
             'javax.help:jhall:'+                libraryVersions.jhall
+//  ,
+//            'org.springframework:spring-aop:3.1.1.RELEASE'
+
+
 
     source 'org.jdom:jdom:'+                  libraryVersions.jdom,
-//           'ca.odell.glazedlists:jdk_1.5:'+   libraryVersions.glazedLists,
-//           'org.codehaus.xstream:xstream:'+   libraryVersions.xstream,
-//           'org.tmatesoft.svnkit:svnkit:'+    libraryVersions.svnkit,
-//           'w3c:jtidy:'+                      libraryVersions.jtidy,
+           'org.tmatesoft.svnkit:svnkit:'+    libraryVersions.svnkit,
            'com.ryangrier.ant:version_tool:'+ libraryVersions.version_tool,
            'com.nurflugel:buildtasks:'+       libraryVersions.buildtasks,
            'org.apache:commons-logging:'+     libraryVersions.commons_logging,
@@ -70,6 +68,9 @@ dependencies {
            'com.intellij:forms_rt:'+          libraryVersions.forms_rt,
            'org.apache:log4j:'+               libraryVersions.log4j,
            'org.testng:testng:'+              libraryVersions.testng,
-//           'org.objectweb.asm:asm:'+          libraryVersions.asm,
+           'org.objectweb.asm:asm:'+          libraryVersions.asm,
            'javax.help:jhall:'+               libraryVersions.jhall
+//  ,
+//            'org.springframework:spring-aop:3.1.1.RELEASE'
+
 }

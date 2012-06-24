@@ -2,11 +2,12 @@ apply plugin: 'application'
 
 apply from: 'dependencies.gradle'
 //apply from: 'http://ant-master-build-scripts.googlecode.com/svn/trunk/master-gradle/master-webstart-build.gradle'
-apply from: 'master-gradle/master-webstart-build.gradle'
+apply from:  'master-gradle/master-webstart-build.gradle'
 
-//version = "0.1-SNAPSHOT"  //used to set Ivy version if we're going to publish
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
+
 mainClassName = "com.nurflugel.picturebrowserservlet.gui.MainFrame"
+versionClassName = 'com.nurflugel.util.Util'
 

@@ -692,7 +692,10 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
   {
     try
     {
-      thePicture.setBackground(Color.LIGHT_GRAY);
+      if (thePicture != null)
+      {
+        thePicture.setBackground(Color.LIGHT_GRAY);
+      }
     }
     catch (Exception e)
     {
