@@ -23,7 +23,7 @@ class BreadCrumbPanel extends JPanel implements ActionListener
   {
     theFrame = frame;
     setLayout(new FlowLayout());
-    browseButton = new JButton("Browse");
+    browseButton = new JButton("Browse Files");
     browseButton.addActionListener(this);
   }
 

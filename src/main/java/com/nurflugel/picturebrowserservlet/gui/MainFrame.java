@@ -488,7 +488,7 @@ public class MainFrame extends JFrame implements KeyListener
           logger.debug("Tried to get help.hs as a URL, returned null");
         }
 
-        url = new URL("file:/F:/Dougs Files/JavaStuff/Picture Browser Servlet/help/help.hs");
+        url = new URL("file:src/app/web/help/help.hs");
 
         if (logger.isDebugEnabled())
         {
@@ -992,6 +992,7 @@ public class MainFrame extends JFrame implements KeyListener
       }
 
       currentDir = theFile;
+      settings.setLastVisitedDir(theFile.getAbsolutePath());
       breadCrumbPanel.populateBreadCrumbPanel(currentDir);
       refresh(getNumColumnsFromXml);
     }

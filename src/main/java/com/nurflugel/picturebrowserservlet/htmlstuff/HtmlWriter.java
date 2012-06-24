@@ -72,8 +72,17 @@ public class HtmlWriter
     // String[]       filesToCopy       = new String[size+20];
     for (FilesToCopy aSystemFilesToCopy : FilesToCopy.values())
     {
-      systemFileName = "images/" + aSystemFilesToCopy;
-      saveSystemImageFile(new File(systemFileName));
+      systemFileName = "images/" + aSystemFilesToCopy;  // todo deal with these as resources...
+
+      try
+      {
+        saveSystemImageFile(new File(systemFileName));
+      }
+      catch (IOException e)
+      {
+        System.out.println("Hiding exception, put printing stacktrace");
+        e.printStackTrace();
+      }
     }
 
     for (String aSkinFilesToCopy : skinFilesToCopy)
@@ -136,7 +145,14 @@ public class HtmlWriter
           logger.debug("resource = " + resource);
         }
 
-        saveMiscImageFiles(currentDir, fileName, resource);
+        if (resource == null)
+        {
+          logger.error("The resource is null for " + fileName);
+        }
+        else
+        {
+          saveMiscImageFiles(currentDir, fileName, resource);
+        }
       }
     }
     else
