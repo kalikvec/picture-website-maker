@@ -1,7 +1,7 @@
 package com.nurflugel.picturebrowserservlet.gui;
 
 import com.nurflugel.picturebrowserservlet.LogFactory;
-import com.nurflugel.picturebrowserservlet.UtilMethods;
+import com.nurflugel.picturebrowserservlet.util.UtilMethods;
 import org.apache.log4j.Category;
 import java.awt.image.BufferedImage;
 import java.io.File;

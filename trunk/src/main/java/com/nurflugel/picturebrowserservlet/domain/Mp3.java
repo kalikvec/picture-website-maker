@@ -6,6 +6,8 @@ import java.io.File;
 
 public class Mp3 extends SoundFile
 {
+  private static final long serialVersionUID = 3407160848242301394L;
+
   public Mp3(File file, String title, String description, String url, SortCriteria sortCriteria)
   {
     super(file, title, description, url, sortCriteria);

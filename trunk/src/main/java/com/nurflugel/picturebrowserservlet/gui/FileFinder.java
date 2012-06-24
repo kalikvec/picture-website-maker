@@ -1,7 +1,7 @@
 package com.nurflugel.picturebrowserservlet.gui;
 
 import com.nurflugel.picturebrowserservlet.LogFactory;
-import com.nurflugel.picturebrowserservlet.UtilMethods;
+import com.nurflugel.picturebrowserservlet.util.UtilMethods;
 import com.nurflugel.picturebrowserservlet.domain.Dir;
 import com.nurflugel.picturebrowserservlet.domain.MediaFile;
 import com.nurflugel.picturebrowserservlet.domain.MediaFileFactory;

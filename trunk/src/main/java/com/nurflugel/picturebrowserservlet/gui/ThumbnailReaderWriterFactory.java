@@ -8,16 +8,8 @@ public class ThumbnailReaderWriterFactory
   /**  */
   public static ThumbnailReaderWriter getThumbnailReaderWriter(boolean isDirButtonselected)
   {
-    ThumbnailReaderWriter thumbnailReaderWriter;
-
-    if (isDirButtonselected)
-    {
-      thumbnailReaderWriter = new DirThumbnailReaderWriter();
-    }
-    else
-    {
-      thumbnailReaderWriter = new SmThumbnailReaderWriter();
-    }
+    ThumbnailReaderWriter thumbnailReaderWriter = isDirButtonselected ? new DirThumbnailReaderWriter()
+                                                                      : new SmThumbnailReaderWriter();
 
     return thumbnailReaderWriter;
   }

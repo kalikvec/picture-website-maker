@@ -29,16 +29,8 @@ class ScrollablePicture extends JLabel implements Scrollable
   public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction)
   {
     // Get the current position.
-    int currentPosition = 0;
-
-    if (orientation == HORIZONTAL)
-    {
-      currentPosition = visibleRect.x;
-    }
-    else
-    {
-      currentPosition = visibleRect.y;
-    }
+    int currentPosition = (orientation == HORIZONTAL) ? visibleRect.x
+                                                      : visibleRect.y;
 
     // Return the number of pixels between currentPosition
     // and the nearest tick mark in the indicated direction.
@@ -58,14 +50,8 @@ class ScrollablePicture extends JLabel implements Scrollable
   /**  */
   public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction)
   {
-    if (orientation == HORIZONTAL)
-    {
-      return visibleRect.width - maxUnitIncrement;
-    }
-    else
-    {
-      return visibleRect.height - maxUnitIncrement;
-    }
+    return (orientation == HORIZONTAL) ? (visibleRect.width - maxUnitIncrement)
+                                       : (visibleRect.height - maxUnitIncrement);
   }
 
   /**  */

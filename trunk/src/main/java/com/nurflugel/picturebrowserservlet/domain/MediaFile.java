@@ -4,14 +4,18 @@ import com.nurflugel.picturebrowserservlet.LogFactory;
 import com.nurflugel.picturebrowserservlet.gui.MainFrame;
 import com.nurflugel.picturebrowserservlet.gui.MetadataWriter;
 import com.nurflugel.picturebrowserservlet.gui.SortCriteria;
+import static com.nurflugel.picturebrowserservlet.gui.MetadataWriter.addItem;
 import static com.nurflugel.picturebrowserservlet.gui.TagsAndStuff.*;
+import static com.nurflugel.picturebrowserservlet.util.UtilMethods.addToLines;
 import com.nurflugel.picturebrowserservlet.gui.ThumbnailReaderWriter;
 import com.nurflugel.picturebrowserservlet.htmlstuff.NurFont;
+import com.nurflugel.picturebrowserservlet.util.UtilMethods;
 import org.apache.log4j.Category;
 import org.jdom.Element;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 public abstract class MediaFile extends com.nurflugel.picturebrowserservlet.domain.File
@@ -41,15 +45,15 @@ public abstract class MediaFile extends com.nurflugel.picturebrowserservlet.doma
     Element picTag = new Element(picTagElement);
 
     header.addContent(picTag);
-    MetadataWriter.addItem(picTag, filenameTag, getFile().getName());
-    MetadataWriter.addItem(picTag, descriptionTag, getDescription());
-    MetadataWriter.addItem(picTag, titleTag, getTitle());
-    MetadataWriter.addItem(picTag, urlTag, getUrl());
-    MetadataWriter.addItem(picTag, disPlaySequenceNumberTag, getDisplaySequenceNumber());
+    addItem(picTag, filenameTag, getFile().getName());
+    addItem(picTag, descriptionTag, getDescription());
+    addItem(picTag, titleTag, getTitle());
+    addItem(picTag, urlTag, getUrl());
+    addItem(picTag, disPlaySequenceNumberTag, getDisplaySequenceNumber());
 
     // if (displayExifDropdown)
     // {
-    MetadataWriter.addItem(picTag, displayExifDropdownTag, displayExifDropdown);
+    addItem(picTag, displayExifDropdownTag, displayExifDropdown);
 
     // }
   }
@@ -60,7 +64,7 @@ public abstract class MediaFile extends com.nurflugel.picturebrowserservlet.doma
   }
 
   /** Creates the HTML representation. */
-  public void writeImageElementToHtml(MainFrame mainFrame, List<String> lines, int width) throws IOException
+  public void writeImageElementToHtml(MainFrame mainFrame, Collection<String> lines, int width, int indent) throws IOException
   {
     File    file        = getFile();
     String  description = getDescription();
@@ -68,29 +72,30 @@ public abstract class MediaFile extends com.nurflugel.picturebrowserservlet.doma
     NurFont mainFont    = mainFrame.getSkin().getMainFont();
     String  fontName    = mainFont.getFontName();
 
-    lines.add("                          <TD width=\"" + width + "%\" VALIGN=MIDDLE ALIGN=CENTER >");
-    lines.add("                              <P ALIGN=CENTER>\n");  // +
-    lines.add("<A HREF=\"" + fileName + "\"><IMG SRC=\"./" + getThumbnailName() + "\" ALIGN=\"BOTTOM\" BORDER=0 ALT=\"" + fileName
-                + "\"></A><BR><FONT FACE=\"" + fontName + "\">" + fileName + "</FONT>");
+    addToLines(++indent, "<TD width=\"" + width + "%\" VALIGN=MIDDLE ALIGN=CENTER >", lines);
+    addToLines(++indent, "<P ALIGN=CENTER>\n", lines);  // +
+    addToLines(indent,
+               "<A HREF=\"" + fileName + "\"><IMG SRC=\"./" + getThumbnailName() + "\" ALIGN=\"BOTTOM\" BORDER=0 ALT=\"" + fileName
+                 + "\"></A><BR><FONT FACE=\"" + fontName + "\">" + fileName + "</FONT>", lines);
 
     if (mainFrame.shouldWritePreviews())
     {
-      lines.add("<A HREF=\"" + "previews/" + file.getName() + "\"> preview</A><br>");
+      addToLines(indent, "<A HREF=\"" + "previews/" + file.getName() + "\"> preview</A><br>", lines);
     }
     else
     {
-      lines.add("<br>\n");
+      addToLines(indent, "<br>\n", lines);
     }
 
     boolean showExifInfo = mainFrame.showExifInfoCheckBox();
 
     if (showExifInfo && displayExifDropdown)
     {
-      lines.add("                                   " + getDropdownHtml() + " <BR>");
+      addToLines(indent, getDropdownHtml() + " <BR>", lines);
     }
 
-    lines.add("                                   " + description + " <BR>");
-    lines.add("                           </TD>");
+    addToLines(indent, description + " <BR>", lines);
+    addToLines(--indent, "</TD>", lines);
   }
 
   protected String getThumbnailName()

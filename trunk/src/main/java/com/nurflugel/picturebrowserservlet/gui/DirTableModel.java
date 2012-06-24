@@ -39,7 +39,7 @@ public class DirTableModel extends DefaultTableModel
 
   // ------------------------ OTHER METHODS ------------------------
   @Override
-  @SuppressWarnings({ "RefusedBequest" })
+  @SuppressWarnings("RefusedBequest")
   public boolean isCellEditable(int row, int column)
   {
     return getCanEdit()[column];

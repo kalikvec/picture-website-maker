@@ -15,7 +15,7 @@ public class DirThumbnailReaderWriter extends ThumbnailReaderWriter
     File thumbnailFile = getThumbnailFile(sourceFile);
     File thumbFileDir  = thumbnailFile.getParentFile();
 
-    return thumbFileDir.getName() + "/" + thumbnailFile.getName();
+    return thumbFileDir.getName() + '/' + thumbnailFile.getName();
   }
 
   /**  */

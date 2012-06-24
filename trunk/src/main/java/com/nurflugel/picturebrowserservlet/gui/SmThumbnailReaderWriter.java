@@ -4,6 +4,8 @@ import java.io.File;
 
 public class SmThumbnailReaderWriter extends ThumbnailReaderWriter
 {
+  private static final String JPG    = ".jpg";
+  private static final String SM_JPG = "_sm.jpg";
   // ------------------------ OTHER METHODS ------------------------
 
   /**  */
@@ -22,13 +24,13 @@ public class SmThumbnailReaderWriter extends ThumbnailReaderWriter
     String thumbnailName = null;
     String fileName      = sourceFile.getName();
 
-    if (fileName.indexOf(".jpg") > 0)
+    if (fileName.indexOf(JPG) > 0)
     {
-      thumbnailName = fileName.replaceAll(".jpg", "_sm.jpg");
+      thumbnailName = fileName.replaceAll(JPG, SM_JPG);
     }
     else if (fileName.indexOf(".JPG") > 0)
     {
-      thumbnailName = fileName.replaceAll(".JPG", "_sm.jpg");
+      thumbnailName = fileName.replaceAll(".JPG", SM_JPG);
     }
 
     return new File(sourceFile.getParentFile(), thumbnailName);

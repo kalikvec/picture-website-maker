@@ -9,6 +9,8 @@ import java.util.List;
 
 public class Jpg extends GraphicFile
 {
+  private static final long serialVersionUID = 7875771371985596761L;
+
   public Jpg(File file, String title, String description, String url, boolean displayExifDropdown, SortCriteria sortCriteria)
   {
     super(file, title, description, url, sortCriteria);

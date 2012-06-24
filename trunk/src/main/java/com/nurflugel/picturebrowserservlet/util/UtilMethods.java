@@ -1,23 +1,18 @@
-package com.nurflugel.picturebrowserservlet;
+package com.nurflugel.picturebrowserservlet.util;
 
+import com.nurflugel.picturebrowserservlet.LogFactory;
 import com.nurflugel.picturebrowserservlet.gui.GifDecoder;
-import static com.nurflugel.picturebrowserservlet.gui.TagsAndStuff.*;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Category;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Collection;
 
-/** Created by IntelliJ IDEA. User: Douglas Bullard Date: May 1, 2003 Time: 10:59:57 PM To change this template use Options | File Templates. */
 public class UtilMethods
 {
-  // todo make enums
-  public static String[] SYSTEM_FILES =
-  { UP_ARROW, LEFT_ARROW, RIGHT_ARROW, SOUND_ICON_GIF, SOUND_ICON_JPG, VIDEO_ICON_GIF, VIDEO_ICON_JPG, BACKGROUND_DEFAULT, BACKGROUND_WING };
-  public static String[] FILES_TO_COPY = { UP_ARROW, LEFT_ARROW, RIGHT_ARROW, BACKGROUND_DEFAULT, SOUND_ICON, VIDEO_ICON };
-  private static Category logger       = LogFactory.getInstance(UtilMethods.class);
+  private static Category logger = LogFactory.getInstance(UtilMethods.class);
 
   /**  */
   public static int getNumRowsFromString(String numRowsPerPageString)
@@ -135,14 +130,15 @@ public class UtilMethods
   /**  */
   public static boolean isSystemFile(String fileName)
   {
-    String  newFileName       = fileName.toLowerCase();
-    boolean isSmallThumbnail  = newFileName.contains("_sm");
-    boolean isSystemFile      = false;
-    String  upperCaseFileName = newFileName.toUpperCase();
+    String        newFileName       = fileName.toLowerCase();
+    boolean       isSmallThumbnail  = newFileName.contains("_sm");
+    boolean       isSystemFile      = false;
+    String        upperCaseFileName = newFileName.toUpperCase();
+    SystemFiles[] values            = SystemFiles.values();
 
-    for (String aSYSTEM_FILES : SYSTEM_FILES)
+    for (SystemFiles systemFile : values)
     {
-      if (upperCaseFileName.contains(aSYSTEM_FILES.toUpperCase()))
+      if (upperCaseFileName.contains(systemFile.toString().toUpperCase()))
       {
         isSystemFile = true;
 
@@ -196,75 +192,26 @@ public class UtilMethods
     return isMatch;
   }
 
-  /**  */
-  public static void copyFile(InputStream inputStream, File outputFile) throws IOException
-  {
-    // FileUtils.copyFile(inputStream,outputFile);
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("UtilMethods.copyFile");
-    }
-
-    FileOutputStream out = null;
-
-    try
-    {
-      out = new FileOutputStream(outputFile);
-
-      int    c;
-      byte[] b = new byte[1024];
-
-      while ((c = inputStream.read(b)) != -1)
-      {
-        out.write(b, 0, c);
-      }
-    }
-    finally
-    {
-      try
-      {
-        if (inputStream != null)
-        {
-          inputStream.close();
-        }
-      }
-      finally
-      {
-        if (out != null)
-        {
-          out.close();
-        }
-      }
-    }
-  }
-
-  /**  */
-  public static void copyFile(File inputFile, File outputFile)
-  {
-    FileInputStream in = null;
-
-    try
-    {
-      in = new FileInputStream(inputFile);
-      copyFile(in, outputFile);
-    }
-    catch (Exception e)
-    {
-      logger.error("e = ", e);
-    }
-    finally
-    {
-      try
-      {
-        in.close();
-      }
-      catch (IOException e)
-      {
-        logger.error("e = ", e);
-      }
-    }
-  }
-
   /** Creates a new UtilMethods object. */
   private UtilMethods() {}
+
+  /**
+   * Add a line of text ot the lines.
+   *
+   * @param  numTabs  the number of tabs to indent
+   * @param  text     the text to add
+   * @param  lines    the collection of lines
+   */
+  public static void addToLines(int numTabs, String text, Collection<String> lines)
+  {
+    StringBuilder builder = new StringBuilder();
+
+    for (int i = 0; i < numTabs; i++)
+    {
+      builder.append("  ");
+    }
+
+    builder.append(text);
+    lines.add(builder.toString());
+  }
 }

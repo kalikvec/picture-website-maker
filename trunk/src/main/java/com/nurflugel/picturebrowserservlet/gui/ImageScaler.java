@@ -4,7 +4,7 @@
 package com.nurflugel.picturebrowserservlet.gui;
 
 import com.nurflugel.picturebrowserservlet.LogFactory;
-import com.nurflugel.picturebrowserservlet.UtilMethods;
+import com.nurflugel.picturebrowserservlet.util.UtilMethods;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;

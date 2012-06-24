@@ -1,7 +1,7 @@
 package com.nurflugel.picturebrowserservlet.gui;
 
 import com.nurflugel.picturebrowserservlet.LogFactory;
-import com.nurflugel.picturebrowserservlet.UtilMethods;
+import com.nurflugel.picturebrowserservlet.util.UtilMethods;
 import com.nurflugel.picturebrowserservlet.domain.GraphicFile;
 import com.nurflugel.picturebrowserservlet.domain.MediaFile;
 import com.nurflugel.picturebrowserservlet.exif.NurTag;
@@ -690,7 +690,14 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
   /**  */
   public void raiseBorder()
   {
-    thePicture.setBackground(Color.LIGHT_GRAY);
+    try
+    {
+      thePicture.setBackground(Color.LIGHT_GRAY);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
   }
 
   /**  */
