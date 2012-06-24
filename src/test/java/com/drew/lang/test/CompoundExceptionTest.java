@@ -4,18 +4,16 @@
 package com.drew.lang.test;
 
 import com.drew.lang.CompoundException;
-import junit.framework.TestCase;
+import org.testng.annotations.Test;
 import java.io.IOException;
 import java.io.PrintWriter;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.fail;
 
 /**  */
-public class CompoundExceptionTest extends TestCase
+@Test(groups = "unit")
+public class CompoundExceptionTest
 {
-  public CompoundExceptionTest(String s)
-  {
-    super(s);
-  }
-
   public void testUnnestedGetMessage() throws Exception
   {
     try

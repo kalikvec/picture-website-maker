@@ -8,17 +8,15 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataReader;
 import com.drew.metadata.iptc.IptcDirectory;
 import com.drew.metadata.iptc.IptcReader;
-import junit.framework.TestCase;
+import org.testng.annotations.Test;
 import java.io.File;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**  */
-public class IptcReaderTest extends TestCase
+@Test(groups = "unit")
+public class IptcReaderTest
 {
-  public IptcReaderTest(String s)
-  {
-    super(s);
-  }
-
   public void testExifReader() throws Exception
   {
     File           iptcFile = new File("src/com/drew/metadata/iptc/test/withIptc.jpg");

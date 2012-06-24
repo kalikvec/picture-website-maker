@@ -7,21 +7,19 @@
  */
 package com.drew.lang.test;
 
-import junit.framework.TestCase;
-import java.io.OutputStream;
 import com.drew.lang.NullOutputStream;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import java.io.OutputStream;
 
-public class NullOutputStreamTest extends TestCase
+@Test(groups = "unit")
+public class NullOutputStreamTest
 {
-  public NullOutputStreamTest(String s)
-  {
-    super(s);
-  }
-
   public void testCreateNullOutputStream() throws Exception
   {
     OutputStream out = new NullOutputStream();
 
     out.write(1);
+    Assert.assertTrue(true);
   }
 }

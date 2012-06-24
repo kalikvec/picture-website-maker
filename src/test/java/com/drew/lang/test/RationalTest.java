@@ -21,16 +21,14 @@
 package com.drew.lang.test;
 
 import com.drew.lang.Rational;
-import junit.framework.TestCase;
+import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /** @author  Drew Noakes http://drewnoakes.com */
-public class RationalTest extends TestCase
+@Test(groups = "unit")
+public class RationalTest
 {
-  public RationalTest(String s)
-  {
-    super(s);
-  }
-
   public void testCreateRational() throws Exception
   {
     Rational rational = new Rational(1, 3);
@@ -95,7 +93,7 @@ public class RationalTest extends TestCase
     Rational rational   = new Rational(1, 3);
     Rational reciprocal = rational.getReciprocal();
 
-    assertEquals("new rational should be reciprocal", new Rational(3, 1), reciprocal);
-    assertEquals("origianl reciprocal should remain unchanged", new Rational(1, 3), rational);
+    assertEquals(new Rational(3, 1), reciprocal, "new rational should be reciprocal");
+    assertEquals(new Rational(1, 3), rational, "origianl reciprocal should remain unchanged");
   }
 }

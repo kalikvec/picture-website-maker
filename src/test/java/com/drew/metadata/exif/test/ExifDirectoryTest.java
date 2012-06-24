@@ -4,22 +4,20 @@
 package com.drew.metadata.exif.test;
 
 import com.drew.imaging.jpeg.JpegMetadataReader;
-import com.drew.imaging.jpeg.JpegSegmentReader;
 import com.drew.imaging.jpeg.JpegProcessingException;
+import com.drew.imaging.jpeg.JpegSegmentReader;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifDirectory;
-import junit.framework.TestCase;
+import org.testng.annotations.Test;
 import java.io.File;
+import static com.drew.metadata.exif.ExifDirectory.TAG_THUMBNAIL_DATA;
+import static org.testng.Assert.*;
 
 /**  */
-public class ExifDirectoryTest extends TestCase
+@Test(groups = "unit")
+public class ExifDirectoryTest
 {
-  public ExifDirectoryTest(String s)
-  {
-    super(s);
-  }
-
   public void testGetDirectoryName() throws Exception
   {
     Metadata  metadata  = new Metadata();
@@ -34,7 +32,7 @@ public class ExifDirectoryTest extends TestCase
     Metadata      metadata      = JpegMetadataReader.readMetadata(file);
     ExifDirectory exifDirectory = (ExifDirectory) metadata.getDirectory(ExifDirectory.class);
 
-    assertTrue(exifDirectory.containsTag(ExifDirectory.TAG_THUMBNAIL_DATA));
+    assertTrue(exifDirectory.containsTag(TAG_THUMBNAIL_DATA));
 
     byte[] thumbData = exifDirectory.getThumbnailData();
 

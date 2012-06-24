@@ -24,21 +24,19 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifDirectory;
 import com.drew.metadata.exif.ExifReader;
-import junit.framework.TestCase;
+import org.testng.annotations.Test;
 import java.io.File;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * JUnit test case for class ExifReader.
  *
  * @author  Drew Noakes http://drewnoakes.com
  */
-public class ExifProcessorTest extends TestCase
+@Test(groups = "unit")
+public class ExifProcessorTest
 {
-  public ExifProcessorTest(String s)
-  {
-    super(s);
-  }
-
   public void testLoadFujiFilmJpeg() throws Exception
   {
     String    jpegWithExif = "src/com/drew/metadata/exif/test/withExif.jpg";

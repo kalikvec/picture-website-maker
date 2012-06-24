@@ -5,17 +5,15 @@ package com.drew.metadata.test;
 
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import junit.framework.TestCase;
+import org.testng.annotations.Test;
 import java.util.GregorianCalendar;
+import static java.util.Calendar.JANUARY;
+import static org.testng.Assert.assertEquals;
 
 /**  */
-public class DirectoryTest extends TestCase
+@Test(groups = "unit")
+public class DirectoryTest
 {
-  public DirectoryTest(String s)
-  {
-    super(s);
-  }
-
   public void testSetAndGetInt() throws Exception
   {
     Metadata  metadata  = new Metadata();
@@ -82,10 +80,10 @@ public class DirectoryTest extends TestCase
     directory.setString(3, date3);
     directory.setString(4, date4);
     assertEquals(date1, directory.getString(1));
-    assertEquals(new GregorianCalendar(2002, GregorianCalendar.JANUARY, 30, 24, 59, 59).getTime(), directory.getDate(1));
-    assertEquals(new GregorianCalendar(2002, GregorianCalendar.JANUARY, 30, 24, 59, 0).getTime(), directory.getDate(2));
-    assertEquals(new GregorianCalendar(2002, GregorianCalendar.JANUARY, 30, 24, 59, 59).getTime(), directory.getDate(3));
-    assertEquals(new GregorianCalendar(2002, GregorianCalendar.JANUARY, 30, 24, 59, 0).getTime(), directory.getDate(4));
+    assertEquals(new GregorianCalendar(2002, JANUARY, 30, 24, 59, 59).getTime(), directory.getDate(1));
+    assertEquals(new GregorianCalendar(2002, JANUARY, 30, 24, 59, 0).getTime(), directory.getDate(2));
+    assertEquals(new GregorianCalendar(2002, JANUARY, 30, 24, 59, 59).getTime(), directory.getDate(3));
+    assertEquals(new GregorianCalendar(2002, JANUARY, 30, 24, 59, 0).getTime(), directory.getDate(4));
   }
 
   public void testSetIntArrayGetByteArray() throws Exception

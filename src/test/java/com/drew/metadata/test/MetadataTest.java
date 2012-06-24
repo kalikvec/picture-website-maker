@@ -20,36 +20,38 @@
  */
 package com.drew.metadata.test;
 
+import com.drew.lang.NullOutputStream;
 import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.iptc.IptcDirectory;
 import com.drew.metadata.exif.ExifDirectory;
 import com.drew.metadata.exif.GpsDirectory;
-import com.drew.imaging.jpeg.JpegMetadataReader;
-import com.drew.lang.NullOutputStream;
-import junit.framework.TestCase;
+import com.drew.metadata.iptc.IptcDirectory;
+import org.testng.annotations.Test;
 import java.io.*;
 import java.util.Iterator;
+import static com.drew.imaging.jpeg.JpegMetadataReader.readMetadata;
+import static com.drew.metadata.exif.ExifDirectory.TAG_APERTURE;
+import static com.drew.metadata.exif.ExifDirectory.TAG_BATTERY_LEVEL;
+import static com.drew.metadata.exif.GpsDirectory.TAG_GPS_ALTITUDE;
+import static com.drew.metadata.exif.GpsDirectory.TAG_GPS_DEST_BEARING;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * JUnit test case for class Metadata.
  *
  * @author  Drew Noakes http://drewnoakes.com
  */
-public class MetadataTest extends TestCase
+@Test(groups = "unit")
+public class MetadataTest
 {
-  public MetadataTest(String s)
-  {
-    super(s);
-  }
-
   public void testSetAndGetSingleTag() throws Exception
   {
     Metadata  metadata  = new Metadata();
     Directory directory = metadata.getDirectory(ExifDirectory.class);
 
-    directory.setInt(ExifDirectory.TAG_APERTURE, 1);
-    assertEquals(1, directory.getInt(ExifDirectory.TAG_APERTURE));
+    directory.setInt(TAG_APERTURE, 1);
+    assertEquals(1, directory.getInt(TAG_APERTURE));
   }
 
   public void testSetSameTagMultpleTimes() throws Exception
@@ -57,9 +59,9 @@ public class MetadataTest extends TestCase
     Metadata  metadata  = new Metadata();
     Directory directory = metadata.getDirectory(ExifDirectory.class);
 
-    directory.setInt(ExifDirectory.TAG_APERTURE, 1);
-    directory.setInt(ExifDirectory.TAG_APERTURE, 2);
-    assertEquals("setting the tag with a different value should override old value", 2, directory.getInt(ExifDirectory.TAG_APERTURE));
+    directory.setInt(TAG_APERTURE, 1);
+    directory.setInt(TAG_APERTURE, 2);
+    assertEquals(2, directory.getInt(TAG_APERTURE), "setting the tag with a different value should override old value");
   }
 
   public void testGetDirectory() throws Exception
@@ -74,10 +76,10 @@ public class MetadataTest extends TestCase
     Metadata  metadata = new Metadata();
     Directory exifDir  = metadata.getDirectory(ExifDirectory.class);
 
-    exifDir.setString(ExifDirectory.TAG_APERTURE, "Tag Value");
-    exifDir.setString(ExifDirectory.TAG_BATTERY_LEVEL, "Another tag");
-    assertEquals("Tag Value", exifDir.getString(ExifDirectory.TAG_APERTURE));
-    assertEquals("Another tag", exifDir.getString(ExifDirectory.TAG_BATTERY_LEVEL));
+    exifDir.setString(TAG_APERTURE, "Tag Value");
+    exifDir.setString(TAG_BATTERY_LEVEL, "Another tag");
+    assertEquals("Tag Value", exifDir.getString(TAG_APERTURE));
+    assertEquals("Another tag", exifDir.getString(TAG_BATTERY_LEVEL));
   }
 
   public void testSetAndGetMultipleTagsInMultilpeDirectories() throws Exception
@@ -86,14 +88,14 @@ public class MetadataTest extends TestCase
     Directory exifDir  = metadata.getDirectory(ExifDirectory.class);
     Directory gpsDir   = metadata.getDirectory(GpsDirectory.class);
 
-    exifDir.setString(ExifDirectory.TAG_APERTURE, "ExifAperture");
-    exifDir.setString(ExifDirectory.TAG_BATTERY_LEVEL, "ExifBatteryLevel");
-    gpsDir.setString(GpsDirectory.TAG_GPS_ALTITUDE, "GpsAltitude");
-    gpsDir.setString(GpsDirectory.TAG_GPS_DEST_BEARING, "GpsDestBearing");
-    assertEquals("ExifAperture", exifDir.getString(ExifDirectory.TAG_APERTURE));
-    assertEquals("ExifBatteryLevel", exifDir.getString(ExifDirectory.TAG_BATTERY_LEVEL));
-    assertEquals("GpsAltitude", gpsDir.getString(GpsDirectory.TAG_GPS_ALTITUDE));
-    assertEquals("GpsDestBearing", gpsDir.getString(GpsDirectory.TAG_GPS_DEST_BEARING));
+    exifDir.setString(TAG_APERTURE, "ExifAperture");
+    exifDir.setString(TAG_BATTERY_LEVEL, "ExifBatteryLevel");
+    gpsDir.setString(TAG_GPS_ALTITUDE, "GpsAltitude");
+    gpsDir.setString(TAG_GPS_DEST_BEARING, "GpsDestBearing");
+    assertEquals("ExifAperture", exifDir.getString(TAG_APERTURE));
+    assertEquals("ExifBatteryLevel", exifDir.getString(TAG_BATTERY_LEVEL));
+    assertEquals("GpsAltitude", gpsDir.getString(TAG_GPS_ALTITUDE));
+    assertEquals("GpsDestBearing", gpsDir.getString(TAG_GPS_DEST_BEARING));
   }
 
   /*
@@ -117,9 +119,9 @@ public class MetadataTest extends TestCase
     Metadata  metadata = new Metadata();
     Directory exifDir  = metadata.getDirectory(ExifDirectory.class);
 
-    assertTrue(!exifDir.containsTag(ExifDirectory.TAG_APERTURE));
-    exifDir.setString(ExifDirectory.TAG_APERTURE, "Tag Value");
-    assertTrue(exifDir.containsTag(ExifDirectory.TAG_APERTURE));
+    assertTrue(!exifDir.containsTag(TAG_APERTURE));
+    exifDir.setString(TAG_APERTURE, "Tag Value");
+    assertTrue(exifDir.containsTag(TAG_APERTURE));
   }
 
   public void testGetNonExistantTag() throws Exception
@@ -127,21 +129,21 @@ public class MetadataTest extends TestCase
     Metadata  metadata = new Metadata();
     Directory exifDir  = metadata.getDirectory(ExifDirectory.class);
 
-    assertEquals(null, exifDir.getString(ExifDirectory.TAG_APERTURE));
+    assertEquals(null, exifDir.getString(TAG_APERTURE));
   }
 
   public void testHasErrors() throws Exception
   {
-    Metadata metadata = JpegMetadataReader.readMetadata(new File("src/com/drew/metadata/exif/test/badExif.jpg"));
+    Metadata metadata = readMetadata(new File("src/com/drew/metadata/exif/test/badExif.jpg"));
 
-    assertTrue("exif error", metadata.getDirectory(ExifDirectory.class).hasErrors());
-    metadata = JpegMetadataReader.readMetadata(new File("src/com/drew/metadata/exif/test/withExif.jpg"));
-    assertTrue("no errors", !metadata.getDirectory(ExifDirectory.class).hasErrors());
+    assertTrue(metadata.getDirectory(ExifDirectory.class).hasErrors(), "exif error");
+    metadata = readMetadata(new File("src/com/drew/metadata/exif/test/withExif.jpg"));
+    assertTrue(!metadata.getDirectory(ExifDirectory.class).hasErrors(), "no errors");
   }
 
   public void testGetErrors() throws Exception
   {
-    Metadata metadata = JpegMetadataReader.readMetadata(new File("src/com/drew/metadata/exif/test/badExif.jpg"));
+    Metadata metadata = readMetadata(new File("src/com/drew/metadata/exif/test/badExif.jpg"));
     Iterator errors   = metadata.getDirectory(ExifDirectory.class).getErrors();
 
     assertTrue(errors.hasNext());
@@ -154,21 +156,21 @@ public class MetadataTest extends TestCase
 
   public void testGetErrorCount() throws Exception
   {
-    Metadata metadata = JpegMetadataReader.readMetadata(new File("src/com/drew/metadata/exif/test/badExif.jpg"));
+    Metadata metadata = readMetadata(new File("src/com/drew/metadata/exif/test/badExif.jpg"));
 
     assertEquals(1, metadata.getDirectory(ExifDirectory.class).getErrorCount());
   }
 
   public void testMetadataSerializable() throws Exception
   {
-    Metadata metadata = JpegMetadataReader.readMetadata(new File("src/com/drew/metadata/test/withIptcExifGps.jpg"));
+    Metadata metadata = readMetadata(new File("src/com/drew/metadata/test/withIptcExifGps.jpg"));
 
     new ObjectOutputStream(new NullOutputStream()).writeObject(metadata);
   }
 
   public void testSerializeAndRestore() throws Exception
   {
-    Metadata metadataWrite = JpegMetadataReader.readMetadata(new File("src/com/drew/metadata/test/withIptcExifGps.jpg"));
+    Metadata metadataWrite = readMetadata(new File("src/com/drew/metadata/test/withIptcExifGps.jpg"));
     Metadata metadataRead;
     File     ser           = File.createTempFile("test", "ser");
 
