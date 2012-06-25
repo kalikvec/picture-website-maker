@@ -2,6 +2,7 @@ package com.nurflugel.picturebrowserservlet.htmlstuff;
 
 import com.nurflugel.picturebrowserservlet.gui.TagsAndStuff;
 import java.awt.*;
+import static com.nurflugel.picturebrowserservlet.gui.TagsAndStuff.BACKGROUND_DEFAULT;
 
 public class DefaultSkin extends Skin
 {
@@ -13,7 +14,7 @@ public class DefaultSkin extends Skin
   /** Creates a new DefaultSkin object. */
   public DefaultSkin()
   {
-    super(TagsAndStuff.BACKGROUND_DEFAULT, defaultMainFont, defaultTitleFont, defaultDirFont, defaultCaptionFont);
+    super(BACKGROUND_DEFAULT, defaultMainFont, defaultTitleFont, defaultDirFont, defaultCaptionFont);
   }
 
   /** Creates a new DefaultSkin object. */

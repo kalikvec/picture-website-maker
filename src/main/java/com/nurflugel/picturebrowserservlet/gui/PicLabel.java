@@ -23,9 +23,23 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.List;
 import org.apache.log4j.Category;
+import static com.nurflugel.picturebrowserservlet.gui.TagsAndStuff.SOUND_ICON;
+import static com.nurflugel.picturebrowserservlet.gui.TagsAndStuff.VIDEO_ICON;
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.SOUTH;
+import static java.awt.Color.BLACK;
+import static java.awt.Color.DARK_GRAY;
+import static java.awt.Color.LIGHT_GRAY;
 import static java.awt.datatransfer.DataFlavor.stringFlavor;
+import static java.awt.dnd.DnDConstants.ACTION_COPY_OR_MOVE;
+import static java.awt.dnd.DnDConstants.ACTION_MOVE;
+import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import static java.awt.event.KeyEvent.*;
+import static java.io.File.separatorChar;
+import static javax.swing.BoxLayout.Y_AXIS;
+import static javax.swing.JOptionPane.*;
 
-@SuppressWarnings({ "RefusedBequest" })
+@SuppressWarnings("RefusedBequest")
 public class PicLabel extends JPanel implements ActionListener, DropTargetListener, DragGestureListener, DragSourceListener, MouseListener
 {
   private static final Category logger                = LogFactory.getInstance(PicLabel.class);
@@ -34,19 +48,19 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
   private JTextArea             textArea;
   private JComboBox             theDropdown;
   private Icon                  icon;
-  private MainFrame             theFrame;
+  private MainFrameInterface    theFrame;
   private MediaFile             thePic;
   private SimpleDateFormat      dateFormat            = new SimpleDateFormat("hh:mm:ss:SS");
   private ThumbnailReaderWriter thumbnailReaderWriter;
   private JPopupMenu            popupMenu;
   private PicPanel              picPanel;
   private ClassLoader           classloader;
-  private Border                unselectedBorder      = new LineBorder(Color.BLACK);
+  private Border                unselectedBorder      = new LineBorder(BLACK);
   private boolean               isSelected;
   private JCheckBoxMenuItem     checkMenuItem;
 
   /** Creates a new PicLabel object. */
-  public PicLabel(MediaFile thePic, MainFrame mainFrame, PicPanel picPanel)
+  public PicLabel(MediaFile thePic, MainFrameInterface mainFrame, PicPanel picPanel)
   {
     classloader   = getClass().getClassLoader();
     this.picPanel = picPanel;
@@ -96,7 +110,7 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
 
     // DragGestureRecognizer gestureRecognizer = dragSource.createDefaultDragGestureRecognizer(this,
     // DnDConstants.ACTION_COPY_OR_MOVE, this);              DropTarget            dropTarget        = new DropTarget(this, this);
-    dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
+    dragSource.createDefaultDragGestureRecognizer(this, ACTION_COPY_OR_MOVE, this);
     new DropTarget(this, this);
 
     try
@@ -144,11 +158,11 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
 
         try
         {
-          smallerIcon = new ImageIcon(classloader.getResource(TagsAndStuff.SOUND_ICON));
+          smallerIcon = new ImageIcon(classloader.getResource(SOUND_ICON));
         }
         catch (Exception e)
         {
-          thumbnailFile = new File("images/" + TagsAndStuff.SOUND_ICON);
+          thumbnailFile = new File("images/" + SOUND_ICON);
           smallerIcon   = thumbnailReaderWriter.getOrCreateImageFromFile(thumbnailFile, sourceFile);
         }
       }
@@ -161,11 +175,11 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
 
         try
         {
-          smallerIcon = new ImageIcon(classloader.getResource(TagsAndStuff.VIDEO_ICON));
+          smallerIcon = new ImageIcon(classloader.getResource(VIDEO_ICON));
         }
         catch (Exception e)
         {
-          thumbnailFile = new File("images/" + TagsAndStuff.VIDEO_ICON);
+          thumbnailFile = new File("images/" + VIDEO_ICON);
           smallerIcon   = thumbnailReaderWriter.getOrCreateImageFromFile(thumbnailFile, sourceFile);
         }
       }
@@ -202,9 +216,9 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
     JPanel bottomPanel = new JPanel();
 
     setLayout(new BorderLayout());
-    add(thePicture, BorderLayout.CENTER);
-    add(bottomPanel, BorderLayout.SOUTH);
-    bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+    add(thePicture, CENTER);
+    add(bottomPanel, SOUTH);
+    bottomPanel.setLayout(new BoxLayout(bottomPanel, Y_AXIS));
     bottomPanel.add(theTitle);
     theDropdown = getExifStuffForDropdown();
 
@@ -231,8 +245,8 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
         public void keyPressed(KeyEvent event)
         {
           int keyCode = event.getKeyCode();
-          int vkEnter = KeyEvent.VK_ENTER;
-          int vkTab   = KeyEvent.VK_TAB;
+          int vkEnter = VK_ENTER;
+          int vkTab   = VK_TAB;
 
           if (keyCode == vkEnter)
           {
@@ -393,7 +407,7 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
     {
       int action = event.getDropAction();
 
-      if (action == DnDConstants.ACTION_MOVE)
+      if (action == ACTION_MOVE)
       {
         if (logger.isDebugEnabled())
         {
@@ -481,7 +495,7 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
       logger.debug("PicLabel.drop");
     }
 
-    event.acceptDrop(DnDConstants.ACTION_MOVE);
+    event.acceptDrop(ACTION_MOVE);
 
     Transferable transferable = event.getTransferable();
     DataFlavor[] flavors      = transferable.getTransferDataFlavors();
@@ -547,7 +561,7 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
     int     maxy                           = miny + iconHeight;
     boolean isClickWithinPicture           = (x > minx) && (x < maxx) && (y > miny) && (y < maxy);
     int     button                         = event.getButton();  // is it the picture we just clicked on?
-    int     onmask                         = InputEvent.CTRL_DOWN_MASK;
+    int     onmask                         = CTRL_DOWN_MASK;
     int     modifiersEx                    = event.getModifiersEx();
     boolean isControlKeyAndMouseButtonDown = (modifiersEx & onmask) == onmask;
 
@@ -608,9 +622,9 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
   void delete()
   {
     File file     = thePic.getFile();
-    int  response = JOptionPane.showConfirmDialog(this, "Really delete this picture?", "There's no going back!", JOptionPane.YES_NO_OPTION);
+    int  response = showConfirmDialog(this, "Really delete this picture?", "There's no going back!", YES_NO_OPTION);
 
-    if (response == JOptionPane.YES_OPTION)
+    if (response == YES_OPTION)
     {
       if (logger.isDebugEnabled())
       {
@@ -629,26 +643,25 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
   }
 
   /**  */
-  @SuppressWarnings({ "CallToRuntimeExec" })
+  @SuppressWarnings("CallToRuntimeExec")
   private void executeFile()
   {
     String absolutePath = thePic.getFile().getAbsolutePath();
 
     if (theFrame.shouldWritePreviews())
     {
-      absolutePath = new File(thePic.getFile().getParentFile().getPath() + File.separatorChar + "previews", thePic.getFile().getName())
-                       .getAbsolutePath();
+      absolutePath = new File(thePic.getFile().getParentFile().getPath() + separatorChar + "previews", thePic.getFile().getName()).getAbsolutePath();
     }
 
     if (thePic instanceof GraphicFile)
     {
       new BigPictureViewer(absolutePath, theFrame).show();
     }
-    else  // let the system deal with it
+    else                                                                  // let the system deal with it
     {
       try
       {
-        Runtime.getRuntime().exec("cmd.exe /c \"" + absolutePath + "\"");
+        Runtime.getRuntime().exec("cmd.exe /c \"" + absolutePath + '"');  // todo use OS class to view
       }
       catch (IOException e)
       {
@@ -672,7 +685,7 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
   /**  */
   private void lowerBorder()
   {
-    thePicture.setBackground(Color.DARK_GRAY);
+    thePicture.setBackground(DARK_GRAY);
   }
 
   /**  */
@@ -694,7 +707,7 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
     {
       if (thePicture != null)
       {
-        thePicture.setBackground(Color.LIGHT_GRAY);
+        thePicture.setBackground(LIGHT_GRAY);
       }
     }
     catch (Exception e)
@@ -717,11 +730,11 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
     {
       if (isSelected)
       {
-        thePicture.setBackground(Color.DARK_GRAY);
+        thePicture.setBackground(DARK_GRAY);
       }
       else
       {
-        thePicture.setBackground(Color.LIGHT_GRAY);
+        thePicture.setBackground(LIGHT_GRAY);
       }
 
       repaint();
@@ -747,12 +760,12 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
 
     if (controlDown)
     {
-      if (keyCode == KeyEvent.VK_X)
+      if (keyCode == VK_X)
       {
         picPanel.cutAction();
       }
 
-      if (keyCode == KeyEvent.VK_V)
+      if (keyCode == VK_V)
       {
         picPanel.pasteAction(this);
       }
@@ -764,8 +777,7 @@ public class PicLabel extends JPanel implements ActionListener, DropTargetListen
   {
     File   file        = thePic.getFile();
     String oldFileName = file.getName();
-    String newFileName = (String) JOptionPane.showInputDialog(this, "What is the new file name?", "Rename File", JOptionPane.PLAIN_MESSAGE, icon,
-                                                              null, oldFileName);
+    String newFileName = (String) showInputDialog(this, "What is the new file name?", "Rename File", PLAIN_MESSAGE, icon, null, oldFileName);
 
     theTitle.setText(newFileName);
 

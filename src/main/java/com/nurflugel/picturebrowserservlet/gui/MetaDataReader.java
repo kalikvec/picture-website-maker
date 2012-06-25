@@ -11,19 +11,19 @@ import java.io.File;
 /** Created by IntelliJ IDEA. User: Douglas Bullard Date: May 23, 2003 Time: 11:39:24 PM To change this template use Options | File Templates. */
 public class MetaDataReader
 {
-  private static Category logger              = LogFactory.getInstance(MetaDataReader.class);
-  private File            currentDir;
-  private String          metadataFileName;
-  private Dir             dirpage;
-  private boolean         shouldSetNumColumns;
-  private int             numColumns;
-  private int             numRows;
-  private boolean         addUpLink;
-  private MainFrame       mainFrame;
+  private static Category    logger              = LogFactory.getInstance(MetaDataReader.class);
+  private File               currentDir;
+  private String             metadataFileName;
+  private Dir                dirpage;
+  private boolean            shouldSetNumColumns;
+  private int                numColumns;
+  private int                numRows;
+  private boolean            addUpLink;
+  private MainFrameInterface mainFrame;
 
   /** Creates a new MetaDataReader object. */
-  public MetaDataReader(MainFrame mainFrame, File currentDir, String metadataFileName, Dir dirpage, boolean shouldSetNumColumns, int numColumns,
-                        int numRows)
+  public MetaDataReader(MainFrameInterface mainFrame, File currentDir, String metadataFileName, Dir dirpage, boolean shouldSetNumColumns,
+                        int numColumns, int numRows)
   {
     this.mainFrame           = mainFrame;
     this.currentDir          = currentDir;
@@ -40,7 +40,7 @@ public class MetaDataReader
     String  textFromTag = getTextFromTag(picElement, tag);
     boolean result      = true;
 
-    if ((textFromTag != null) && (!textFromTag.isEmpty()))
+    if ((textFromTag != null) && !textFromTag.isEmpty())
     {
       result = textFromTag.equalsIgnoreCase("true");
     }
@@ -109,7 +109,7 @@ public class MetaDataReader
   }
 
   // ------------------------ GETTER/SETTER METHODS ------------------------
-  public MainFrame getMainFrame()
+  public MainFrameInterface getMainFrame()
   {
     return mainFrame;
   }

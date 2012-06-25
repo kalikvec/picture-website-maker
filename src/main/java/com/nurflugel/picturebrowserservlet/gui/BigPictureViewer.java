@@ -8,9 +8,9 @@ import java.awt.event.MouseListener;
 class BigPictureViewer extends JDialog implements MouseListener
 {
   /** Creates a new BigPictureViewer object. */
-  BigPictureViewer(String text, MainFrame frame)
+  BigPictureViewer(String text, MainFrameInterface frame)
   {
-    super(frame, text, true);
+    super((Frame) frame, text, true);
 
     ImageIcon         icon    = new ImageIcon(text);
     ScrollablePicture picture = new ScrollablePicture(icon, 2);

@@ -12,12 +12,12 @@ import javax.swing.*;
  */
 public class PreviewGenerator implements Runnable
 {
-  private List<MediaFile> pics;
-  private ProgressMonitor progressMonitor;
-  private MainFrame       mainFrame;
+  private List<MediaFile>    pics;
+  private ProgressMonitor    progressMonitor;
+  private MainFrameInterface mainFrame;
 
-  @SuppressWarnings({ "AssignmentToCollectionOrArrayFieldFromParameter" })
-  public PreviewGenerator(List<MediaFile> pics, ProgressMonitor progressMonitor, MainFrame mainFrame)
+  @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
+  public PreviewGenerator(List<MediaFile> pics, ProgressMonitor progressMonitor, MainFrameInterface mainFrame)
   {
     this.pics            = pics;
     this.progressMonitor = progressMonitor;

@@ -4,6 +4,7 @@ package com.nurflugel.picturebrowserservlet.gui;
 @SuppressWarnings({ "PackageVisibleField", "ConstantNamingConvention" })
 public class TagsAndStuff
 {
+  public static final String IMAGES_BASE                     = "http://picture-website-maker.googlecode.com/svn/trunk/webstart/help/html/assets/images/";
   public static final String UP_ARROW                        = "uparrow.gif";
   public static final String LEFT_ARROW                      = "leftarrow.gif";
   public static final String RIGHT_ARROW                     = "rightarrow.gif";

@@ -18,17 +18,17 @@ import static javax.swing.border.BevelBorder.RAISED;
 class DirTable extends JPanel
 {
   /** Use serialVersionUID for interoperability. */
-  private static final long serialVersionUID     = 4018284468601520571L;
-  private static int        MAX_DIR_TABLE_HEIGHT = 300;
-  private static int        HEIGHT_PER_ROW       = 25;
-  private static double     MULTIPLIER           = 0.95;
-  private MainFrame         theFrame;
-  private DirTableModel     dirTableModel;
-  private JTable            theTable;
-  private Category          logger               = LogFactory.getInstance(DirTable.class);
+  private static final long  serialVersionUID     = 4018284468601520571L;
+  private static int         MAX_DIR_TABLE_HEIGHT = 300;
+  private static int         HEIGHT_PER_ROW       = 25;
+  private static double      MULTIPLIER           = 0.95;
+  private MainFrameInterface theFrame;
+  private DirTableModel      dirTableModel;
+  private JTable             theTable;
+  private Category           logger               = LogFactory.getInstance(DirTable.class);
 
   /** Creates a new DirTable object. */
-  DirTable(MainFrame theFrame, List<Dir> dirs)
+  DirTable(MainFrameInterface theFrame, List<Dir> dirs)
   {
     theTable = new JTable();
 

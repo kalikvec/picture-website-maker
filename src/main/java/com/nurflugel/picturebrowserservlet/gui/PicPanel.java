@@ -12,7 +12,7 @@ import java.util.List;
 class PicPanel extends JPanel implements PicContainer
 {
   private static Logger            logger            = LogFactory.getInstance(PicPanel.class);
-  private MainFrame                theFrame;
+  private MainFrameInterface       theFrame;
   private List<MediaFile>          fileList          = new ArrayList<MediaFile>();
   private int                      numColumns        = 2;
   private Map<MediaFile, PicLabel> picMap            = new HashMap<MediaFile, PicLabel>();
@@ -25,7 +25,7 @@ class PicPanel extends JPanel implements PicContainer
   private boolean                  showExifDropdowns = true;
 
   /** Creates a new PicPanel object. */
-  PicPanel(MainFrame theFrame, List<MediaFile> labelList, int numColumns, Dir dir)
+  PicPanel(MainFrameInterface theFrame, List<MediaFile> labelList, int numColumns, Dir dir)
   {
     this.theFrame = theFrame;
     theDir        = dir;
