@@ -252,7 +252,7 @@ public class HtmlWriter
       addToLines(0, "</HEAD>", lines);
       addPreBodyText(lines);
       addToLines(0,
-                 "<BODY BGCOLOR=\"#FFFFFF\" BACKGROUND=\"./" + backgroundFileName
+                 "<BODY BGCOLOR=\"#FFFFFF\" BACKGROUND=\"" + IMAGES_BASE + backgroundFileName
                    + "\" TEXT=\"#000000\" LINK=\"#0033CC\" VLINK=\"#990099\" ALINK=\"#FF0000\">", lines);
 
       // addLines(0, " </TABLE>", lines);
