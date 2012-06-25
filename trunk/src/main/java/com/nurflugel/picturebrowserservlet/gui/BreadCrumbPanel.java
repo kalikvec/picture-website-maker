@@ -18,6 +18,9 @@ class BreadCrumbPanel extends JPanel implements ActionListener
   private MainFrame         theFrame;
   private JButton           browseButton;
 
+  /** empty constructor for Form Designer. */
+  BreadCrumbPanel() {}
+
   /** Creates a new BreadCrumbPanel object. */
   BreadCrumbPanel(MainFrame frame)
   {

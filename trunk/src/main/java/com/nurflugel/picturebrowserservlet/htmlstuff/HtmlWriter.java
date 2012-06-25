@@ -1,6 +1,7 @@
 package com.nurflugel.picturebrowserservlet.htmlstuff;
 
 import com.nurflugel.picturebrowserservlet.LogFactory;
+import com.nurflugel.picturebrowserservlet.gui.TagsAndStuff;
 import com.nurflugel.picturebrowserservlet.util.FilesToCopy;
 import com.nurflugel.picturebrowserservlet.util.UtilMethods;
 import com.nurflugel.picturebrowserservlet.domain.Dir;
@@ -12,6 +13,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import static com.nurflugel.picturebrowserservlet.gui.TagsAndStuff.IMAGES_BASE;
 import static com.nurflugel.picturebrowserservlet.util.UtilMethods.addToLines;
 import static java.lang.Math.min;
 import static java.util.Collections.sort;
@@ -248,6 +250,7 @@ public class HtmlWriter
       addToLines(0, "<META NAME=\"Generator\" CONTENT=\"BullaSoft PictureBrowserServlet\">", lines);
       addToLines(0, "<TITLE>index</TITLE>", lines);
       addToLines(0, "</HEAD>", lines);
+      addPreBodyText(lines);
       addToLines(0,
                  "<BODY BGCOLOR=\"#FFFFFF\" BACKGROUND=\"./" + backgroundFileName
                    + "\" TEXT=\"#000000\" LINK=\"#0033CC\" VLINK=\"#990099\" ALINK=\"#FF0000\">", lines);
@@ -273,6 +276,7 @@ public class HtmlWriter
       writePicturesToFile(lines, page);
       addToLines(1, "</TABLE>", lines);
       addToLines(0, "</BODY>", lines);
+      addPostBodyLines(lines);
       addToLines(0, "</HTML>", lines);
       writeLines(file, lines);
     }
@@ -282,8 +286,47 @@ public class HtmlWriter
     }
   }
 
+  /** big todo to here - get customized Post BODY stuff here. */
+  private void addPostBodyLines(List<String> lines)
+  {
+    addToLines(0, "<script type=\"text/javascript\">", lines);
+    addToLines(0, "$(function() {", lines);
+    addToLines(1, "    //Set the default directory to find the images needed", lines);
+    addToLines(1, "    //by the plugin (closebtn.png, blank.gif, loading images ....)", lines);
+    addToLines(1, "    $.fn.fancyzoom.defaultsOptions.imgDir='http://www.nurflugel.com/images/'; //very important must finish with a /", lines);
+    addToLines(0, "", lines);
+    addToLines(1, "    // Select all links in object with gallery ID using the defaults options", lines);
+    addToLines(1, "    $('#gallery a').fancyzoom(); ", lines);
+    addToLines(0, "", lines);
+    addToLines(1, "    // Select all links with tozoom class, set the open animation time to 1000", lines);
+    addToLines(1, "    $('a.tozoom').fancyzoom({Speed:1000});", lines);
+    addToLines(0, "", lines);
+    addToLines(1, "    // Select all links set the overlay opacity to 80%", lines);
+    addToLines(1, "    $('a').fancyzoom({overlay:0.1});", lines);
+    addToLines(1, "    ", lines);
+    addToLines(1, "    //new rev > 1.2", lines);
+    addToLines(1, "    //apply fancyzoom effect on all image whose class is fancyzoom !!", lines);
+    addToLines(1, "    $('img.fancyzoom').fancyzoom();", lines);
+    addToLines(0, "", lines);
+    addToLines(0, "", lines);
+    addToLines(0, "});", lines);
+    addToLines(0, "</script>", lines);
+  }
+
+  private void addPreBodyText(List<String> lines)
+  {
+    addToLines(0, "", lines);
+    addToLines(0, "<script type=\"text/javascript\" src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js\"></script>", lines);
+    addToLines(0, "", lines);
+    addToLines(0, "<!-- //optional -->", lines);
+    addToLines(0, "<script type=\"text/javascript\" src=\"http://www.nurflugel.com/js/jquery.shadow.js\"></script>", lines);
+    addToLines(0, "<script type=\"text/javascript\" src=\"http://www.nurflugel.com/js/jquery.ifixpng.js\"></script>", lines);
+    addToLines(0, "<!-- //the plugin itself -->", lines);
+    addToLines(0, "<script type=\"text/javascript\" src=\"http://www.nurflugel.com/js/jquery.fancyzoom.js\"></script>\n", lines);
+  }
+
   /**  */
-  private void writeLinksToPages(List<String> lines, int page) throws IOException
+  private void writeLinksToPages(List<String> lines, int page)
   {
     addToLines(2, "<TR>", lines);
     addToLines(3, "<TD ALIGN=\"CENTER\">", lines);
@@ -293,7 +336,7 @@ public class HtmlWriter
 
     if (mainFrame.shouldAddUpLink())
     {
-      addToLines(6, "<TD><A HREF=\"../index.html\"><img src=\"./uparrow.gif\" border=\"0\"></A>", lines);
+      addToLines(6, "<TD><A HREF=\"../index.html\"><img src=\"" + IMAGES_BASE + "uparrow.gif\" border=\"0\"></A>", lines);
     }
 
     writeNextLink(page, lines);
@@ -304,30 +347,31 @@ public class HtmlWriter
   }
 
   /**  */
-  private void writePreviousLink(int page, List<String> lines) throws IOException
+  private void writePreviousLink(int page, List<String> lines)
   {
     if (page == 1)
     {
-      addToLines(5, "<TD><A HREF=\"./index.html\"><img src=\"./leftarrow.gif\" border=\"0\"></A>", lines);
+      // addToLines(5, "<TD><A HREF=\"./index.html\"><img src=\"./leftarrow.gif\" border=\"0\"></A>", lines);
+      addToLines(5, "<TD><A HREF=\"./index.html\"><img src=\"" + IMAGES_BASE + "leftarrow.gif\" border=\"0\"></A>", lines);
     }
 
     if (page > 1)
     {
-      addToLines(5, "<TD><A HREF=\"./index" + (page - 1) + ".html\"><img src=\"./leftarrow.gif\" border=\"0\"></A>", lines);
+      addToLines(5, "<TD><A HREF=\"./index" + (page - 1) + ".html\"><img src=\"" + IMAGES_BASE + "leftarrow.gif\" border=\"0\"></A>", lines);
     }
   }
 
   /**  */
-  private void writeNextLink(int page, List<String> lines) throws IOException
+  private void writeNextLink(int page, List<String> lines)
   {
     if (page < numPages)
     {
-      addToLines(4, "<TD><A HREF=\"./index" + (page + 1) + ".html\"><img src=\"./rightarrow.gif\" border=\"0\"></A>", lines);
+      addToLines(4, "<TD><A HREF=\"./index" + (page + 1) + ".html\"><img src=\"" + IMAGES_BASE + "rightarrow.gif\" border=\"0\"></A>", lines);
     }
   }
 
   /**  */
-  private void writeDirsToFile(List<String> lines) throws IOException
+  private void writeDirsToFile(List<String> lines)
   {
     List<Dir> dirs = dirpage.getDirs();
 

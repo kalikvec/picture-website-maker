@@ -9,6 +9,7 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.log4j.Category;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -19,6 +20,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.*;
+import static com.nurflugel.picturebrowserservlet.util.UtilMethods.readImage;
 
 /**  */
 public class ImageScaler
@@ -46,7 +48,7 @@ public class ImageScaler
                        + getFormattedDateTime());
       }
 
-      BufferedImage bufferedImage = UtilMethods.readImage(thumbnailFile);
+      BufferedImage bufferedImage = readImage(thumbnailFile);
 
       smallerIcon = new ImageIcon(bufferedImage);
     }
@@ -96,7 +98,7 @@ public class ImageScaler
       logger.debug("ThumbnailReaderWriter.makeImageSmaller " + file.getName());
     }
 
-    BufferedImage bufferedImage = UtilMethods.readImage(file);
+    BufferedImage bufferedImage = readImage(file);
     ImageIcon     smallerIcon   = new ImageIcon(bufferedImage);
     int           iconWidth     = smallerIcon.getIconWidth();
     int           iconHeight    = smallerIcon.getIconHeight();
@@ -132,10 +134,6 @@ public class ImageScaler
     {
       logger.debug("Making smaller icon for " + file + "time= " + getFormattedDateTime());
     }
-
-    smallerIcon = new ImageIcon(smallerImage);
-    iconWidth   = smallerIcon.getIconWidth();
-    iconHeight  = smallerIcon.getIconHeight();
 
     return smallerImage;
   }

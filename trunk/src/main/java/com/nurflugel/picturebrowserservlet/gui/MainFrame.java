@@ -40,7 +40,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
                     "MethodWithTooManyParameters", "RefusedBequest", "AssignmentToStaticFieldFromInstanceMethod", "MethodParameterNamingConvention",
                     "MethodOnlyUsedFromInnerClass"
                   })
-public class MainFrame extends JFrame implements KeyListener
+public class MainFrame extends JFrame implements KeyListener, MainFrameInterface
 {
   public static int DEFAULT_NUM_COLUMNS = 4;  // todo in Settings??
 
@@ -96,7 +96,7 @@ public class MainFrame extends JFrame implements KeyListener
   private Skin[]                       availableSkins;
   private Skin                         skin;
   private StatusBar                    statusBar;
-  private boolean                      useGlassPane                      = true;
+  private boolean                      useGlassPane                      = false;
   private InfiniteProgressPanel        glassPane;
   private transient ExecutorService    executor;
   private ProgressMonitor              progressMonitor;
@@ -275,6 +275,117 @@ public class MainFrame extends JFrame implements KeyListener
     // refresh(true);
   }
 
+  /**  */
+  private void setNumColumnButtons()
+  {
+    ActionListener[] actionListeners = numberOfColumnsDropdown.getActionListeners();
+
+    for (ActionListener actionListener : actionListeners)
+    {
+      numberOfColumnsDropdown.removeActionListener(actionListener);
+    }
+
+    numberOfColumnsDropdown.setSelectedItem(String.valueOf(numColumns));
+    numberOfColumnsDropdown.addActionListener(new ActionListener()
+      {
+        public void actionPerformed(ActionEvent evt)
+        {
+          numberOfColumnsDropdownSelected();
+        }
+      });
+  }
+
+  /**  */
+  private void numberOfColumnsDropdownSelected()
+  {
+    numColumns = getNumColumnsFromDropdown();
+    refresh(false);
+  }
+
+  /** Refresh the display with the contents of the current directory. */
+  private void refresh(boolean getNumColumnsFromXml)
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("MainFrame.refresh numColumns = " + numColumns);
+    }
+
+    setUpDirPage(getNumColumnsFromXml);
+
+    List<Dir> dirs = (dirpage == null) ? new ArrayList<Dir>()
+                                       : dirpage.getDirs();
+    List<MediaFile> pics = (dirpage == null) ? new ArrayList<MediaFile>()
+                                             : dirpage.getPics();
+
+    Collections.sort(dirs);  // do an initial sort by dir
+    Collections.sort(pics);  // do an initial sort by file
+
+    // timer.start();
+    setTheCursor(waitCursor);
+
+    if (useGlassPane && !pics.isEmpty())
+    {
+      glassPane.start();
+    }
+
+    setNumColumnButtons();
+    getInfoFromXmlFile(getNumColumnsFromXml);
+    dirTable.refresh(dirs);
+
+    // progressMonitor = new ProgressMonitor(this, "Making previews images...", "Preview image status", 0, pics.size());
+    // progressMonitor.setProgress(0);
+    // progressMonitor.setMillisToDecideToPopup(1 / 2);
+    PreviewGenerator generator = new PreviewGenerator(pics, progressMonitor, this);
+
+    if (shouldWritePreviews())  // executor.execute(generator);
+    {
+      generator.run();
+      // EventQueue.invokeLater(new Runnable() {
+      //
+      // public void run() {
+      //
+      // try {
+      //
+      // if (!pics.isEmpty()) {                                File previewDir = new File(pics.get(0).getFile().getParentFile(), "previews");
+      //
+      // if (!previewDir.exists()) {                                    previewDir.mkdir();       }
+      //
+      // ScaledImageWriter imageWriter = new ScaledImageWriter();
+      //
+      // for (MediaFile pic : pics) {                                    String previewFileName = pic.getFile().getName(); File   scaledFile      =
+      // new File(previewDir, previewFileName);
+      //
+      // imageWriter.getOrCreateImageFromFile(scaledFile, pic.getFile());                                } }                        } catch
+      // (IOException e) { // logger.error("error", e);                        }          } });
+    }
+
+    picturePanel.refresh(pics, numColumns, dirpage);
+    pictureScrollPane.getVerticalScrollBar().setValue(0);
+
+    // timer.stop();
+    setTheCursor(normalCursor);
+    enableButtons(true);
+  }
+
+  /**  */
+  public void getInfoFromXmlFile(boolean shouldSetNumColumns)
+  {
+    MetaDataReader metadataReader = new MetaDataReader(this, currentDir, metadataFileName, dirpage, shouldSetNumColumns, numColumns, numRows);
+
+    metadataReader.getInfoFromXmlFile();
+
+    boolean defaultDisplayExifDropdown = dirpage.getDefaultDisplayExifDropdown();
+
+    showExifInfoCheckbox.setSelected(defaultDisplayExifDropdown);
+    setExifInfoTasks();
+  }
+
+  /**  */
+  private void setTheCursor(Cursor theCursor)
+  {
+    setCursor(theCursor);
+  }
+
   /** Reads in any files from the page and puts them into the page. */
   private void setUpDirPage(boolean refreshFromXml)
   {
@@ -304,26 +415,6 @@ public class MainFrame extends JFrame implements KeyListener
     // } catch (InterruptedException e) {
     // e.printStackTrace();
     // }
-  }
-
-  /**  */
-  private void setNumColumnButtons()
-  {
-    ActionListener[] actionListeners = numberOfColumnsDropdown.getActionListeners();
-
-    for (ActionListener actionListener : actionListeners)
-    {
-      numberOfColumnsDropdown.removeActionListener(actionListener);
-    }
-
-    numberOfColumnsDropdown.setSelectedItem(String.valueOf(numColumns));
-    numberOfColumnsDropdown.addActionListener(new ActionListener()
-      {
-        public void actionPerformed(ActionEvent evt)
-        {
-          numberOfColumnsDropdownSelected();
-        }
-      });
   }
 
   /**  */
@@ -546,9 +637,34 @@ public class MainFrame extends JFrame implements KeyListener
   }
 
   /**  */
+  public File getCurrentDir()
+  {
+    return currentDir;
+  }
+
+  /**  */
+  private int getNumColumnsFromDropdown()
+  {
+    return getNumRowsFromString(getNumColumnsPerPageFromDropdown());
+  }
+
+  /**  */
+  private String getNumColumnsPerPageFromDropdown()
+  {
+    Object selectedItem = numberOfColumnsDropdown.getSelectedItem();
+
+    return (String) selectedItem;
+  }
+
+  /**  */
   public boolean showExifInfoCheckBox()
   {
     return showExifInfoCheckbox.isSelected();
+  }
+
+  public boolean shouldWritePreviews()
+  {
+    return generatePreviewImagesCheckbox.isSelected();
   }
 
   /**  */
@@ -594,116 +710,6 @@ public class MainFrame extends JFrame implements KeyListener
     Object selectedItem = numRowsPerPageDropdown.getSelectedItem();
 
     return (String) selectedItem;
-  }
-
-  /**  */
-  private void numberOfColumnsDropdownSelected()
-  {
-    numColumns = getNumColumnsFromDropdown();
-    refresh(false);
-  }
-
-  /**  */
-  private int getNumColumnsFromDropdown()
-  {
-    return getNumRowsFromString(getNumColumnsPerPageFromDropdown());
-  }
-
-  /**  */
-  private String getNumColumnsPerPageFromDropdown()
-  {
-    Object selectedItem = numberOfColumnsDropdown.getSelectedItem();
-
-    return (String) selectedItem;
-  }
-
-  /** Refresh the display with the contents of the current directory. */
-  private void refresh(boolean getNumColumnsFromXml)
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("MainFrame.refresh numColumns = " + numColumns);
-    }
-
-    setUpDirPage(getNumColumnsFromXml);
-
-    List<Dir> dirs = (dirpage == null) ? new ArrayList<Dir>()
-                                       : dirpage.getDirs();
-    List<MediaFile> pics = (dirpage == null) ? new ArrayList<MediaFile>()
-                                             : dirpage.getPics();
-
-    Collections.sort(dirs);  // do an initial sort by dir
-    Collections.sort(pics);  // do an initial sort by file
-
-    // timer.start();
-    setTheCursor(waitCursor);
-
-    if (useGlassPane && !pics.isEmpty())
-    {
-      glassPane.start();
-    }
-
-    setNumColumnButtons();
-    getInfoFromXmlFile(getNumColumnsFromXml);
-    dirTable.refresh(dirs);
-
-    // progressMonitor = new ProgressMonitor(this, "Making previews images...", "Preview image status", 0, pics.size());
-    // progressMonitor.setProgress(0);
-    // progressMonitor.setMillisToDecideToPopup(1 / 2);
-    PreviewGenerator generator = new PreviewGenerator(pics, progressMonitor, this);
-
-    if (shouldWritePreviews())  // executor.execute(generator);
-    {
-      generator.run();
-      // EventQueue.invokeLater(new Runnable() {
-      //
-      // public void run() {
-      //
-      // try {
-      //
-      // if (!pics.isEmpty()) {                                File previewDir = new File(pics.get(0).getFile().getParentFile(), "previews");
-      //
-      // if (!previewDir.exists()) {                                    previewDir.mkdir();       }
-      //
-      // ScaledImageWriter imageWriter = new ScaledImageWriter();
-      //
-      // for (MediaFile pic : pics) {                                    String previewFileName = pic.getFile().getName(); File   scaledFile      =
-      // new File(previewDir, previewFileName);
-      //
-      // imageWriter.getOrCreateImageFromFile(scaledFile, pic.getFile());                                } }                        } catch
-      // (IOException e) { // logger.error("error", e);                        }          } });
-    }
-
-    picturePanel.refresh(pics, numColumns, dirpage);
-    pictureScrollPane.getVerticalScrollBar().setValue(0);
-
-    // timer.stop();
-    setTheCursor(normalCursor);
-    enableButtons(true);
-  }
-
-  /**  */
-  void getInfoFromXmlFile(boolean shouldSetNumColumns)
-  {
-    MetaDataReader metadataReader = new MetaDataReader(this, currentDir, metadataFileName, dirpage, shouldSetNumColumns, numColumns, numRows);
-
-    metadataReader.getInfoFromXmlFile();
-
-    boolean defaultDisplayExifDropdown = dirpage.getDefaultDisplayExifDropdown();
-
-    showExifInfoCheckbox.setSelected(defaultDisplayExifDropdown);
-    setExifInfoTasks();
-  }
-
-  public boolean shouldWritePreviews()
-  {
-    return generatePreviewImagesCheckbox.isSelected();
-  }
-
-  /**  */
-  private void setTheCursor(Cursor theCursor)
-  {
-    setCursor(theCursor);
   }
 
   /**  */
@@ -841,7 +847,7 @@ public class MainFrame extends JFrame implements KeyListener
   }
 
   /**  */
-  void setNumColumnButtons(int number)
+  public void setNumColumnButtons(int number)
   {
     numColumns = number;
     setNumColumnButtons();
@@ -899,24 +905,23 @@ public class MainFrame extends JFrame implements KeyListener
 
   /**  */
   public void keyReleased(KeyEvent e) {}
-  // --------------------------- main() method ---------------------------
+  // --------------------- Interface MainFrameInterface ---------------------
 
   /**  */
-  public static void main(String[] args)
+  public void setStatus(String text)
   {
-    JFrame.setDefaultLookAndFeelDecorated(false);
-    new MainFrame().setVisible(true);
+    statusBar.setText(text);
+    statusBar.setVisible(false);
+    statusBar.setVisible(true);
   }
-  // -------------------------- OTHER METHODS --------------------------
 
-  // ------------------------ Class Methods ------------------------
   /**  */
-  public void clearStatusBar()
+  public Dir getDirpage()
   {
-    statusBar.clear();
+    return dirpage;
   }
 
-  SortCriteria getSortCriteria()
+  public SortCriteria getSortCriteria()
   {
     if (shouldSortByFileName())
     {
@@ -936,27 +941,6 @@ public class MainFrame extends JFrame implements KeyListener
     return FileName;
   }
 
-  boolean shouldSortByFileName()
-  {
-    return sortByFileNameRadioButton.isSelected();
-  }
-
-  boolean shouldSortByFileTimestamp()
-  {
-    return sortByFileTimestampRadioButton.isSelected();
-  }
-
-  boolean shouldSortByPictureTimestamp()
-  {
-    return sortByPictureTimestampRadioButton.isSelected();
-  }
-
-  /**  */
-  private void renameAction()
-  {
-    picturePanel.renameAction();
-  }
-
   /**  */
   public void setAddUpLink(boolean addUpLink)
   {
@@ -964,7 +948,7 @@ public class MainFrame extends JFrame implements KeyListener
   }
 
   /** Sets the current dir, and reads in any files in it. */
-  void setCurrentDir(File theFile, boolean getNumColumnsFromXml)
+  public void setCurrentDir(File theFile, boolean getNumColumnsFromXml)
   {
     if (logger.isDebugEnabled())
     {
@@ -1003,12 +987,39 @@ public class MainFrame extends JFrame implements KeyListener
     setCursor(normalCursor);
   }
 
-  /**  */
-  void setStatus(String text)
+  public PictureScrollPane getPictureScrollPane()
   {
-    statusBar.setText(text);
-    statusBar.setVisible(false);
-    statusBar.setVisible(true);
+    return pictureScrollPane;
+  }
+
+  public void stopGlasspane()
+  {
+    if (useGlassPane)
+    {
+      glassPane.stop();
+    }
+  }
+  // --------------------------- main() method ---------------------------
+
+  /**  */
+  public static void main(String[] args)
+  {
+    JFrame.setDefaultLookAndFeelDecorated(false);
+    new MainFrame().setVisible(true);
+  }
+  // -------------------------- OTHER METHODS --------------------------
+
+  // ------------------------ Class Methods ------------------------
+  /**  */
+  public void clearStatusBar()
+  {
+    statusBar.clear();
+  }
+
+  /**  */
+  private void renameAction()
+  {
+    picturePanel.renameAction();
   }
 
   /**  */
@@ -1017,27 +1028,21 @@ public class MainFrame extends JFrame implements KeyListener
     return upIconCheckbox.isSelected();
   }
 
-  void stopGlasspane()
+  boolean shouldSortByFileName()
   {
-    if (useGlassPane)
-    {
-      glassPane.stop();
-    }
+    return sortByFileNameRadioButton.isSelected();
+  }
+
+  boolean shouldSortByFileTimestamp()
+  {
+    return sortByFileTimestampRadioButton.isSelected();
+  }
+
+  boolean shouldSortByPictureTimestamp()
+  {
+    return sortByPictureTimestampRadioButton.isSelected();
   }
   // --------------------- GETTER / SETTER METHODS ---------------------
-
-  // ------------------------ GETTER/SETTER METHODS ------------------------
-  /**  */
-  public File getCurrentDir()
-  {
-    return currentDir;
-  }
-
-  /**  */
-  public Dir getDirpage()
-  {
-    return dirpage;
-  }
 
   /**  */
   public int getNumColumns()
@@ -1045,19 +1050,14 @@ public class MainFrame extends JFrame implements KeyListener
     return numColumns;
   }
 
-  public PictureScrollPane getPictureScrollPane()
+  public Settings getSettings()
   {
-    return pictureScrollPane;
+    return settings;
   }
 
   /**  */
   public Skin getSkin()
   {
     return skin;
-  }
-
-  public Settings getSettings()
-  {
-    return settings;
   }
 }

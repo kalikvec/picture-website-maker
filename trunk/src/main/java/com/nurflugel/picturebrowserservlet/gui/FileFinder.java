@@ -11,9 +11,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import static com.nurflugel.picturebrowserservlet.domain.MediaFileFactory.getMediaFile;
 
 /** helper class for long-running task. */
-@SuppressWarnings({ "AssignmentToCollectionOrArrayFieldFromParameter" })
+@SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
 public class FileFinder implements Runnable
 {
   private String                title;
@@ -22,10 +23,10 @@ public class FileFinder implements Runnable
   private List<Dir>             dirs;
   private List<MediaFile>       pics;
   private static final Category logger         = LogFactory.getInstance(FileFinder.class);
-  private MainFrame             mainFrame;
+  private MainFrameInterface    mainFrame;
   private boolean               refreshFromXml;
 
-  FileFinder(String title, String description, String url, List<Dir> dirs, List<MediaFile> pics, MainFrame mainFrame, boolean refreshFromXml)
+  FileFinder(String title, String description, String url, List<Dir> dirs, List<MediaFile> pics, MainFrameInterface mainFrame, boolean refreshFromXml)
   {
     this.title          = title;
     this.description    = description;
@@ -138,8 +139,8 @@ public class FileFinder implements Runnable
     if (!isSystemFile)
     {
       boolean   defaultDisplayExifDropdown = mainFrame.getDirpage().getDefaultDisplayExifDropdown();
-      MediaFile mediaFile                  = MediaFileFactory.getMediaFile(lowerCaseFileName, file, title, description, url,
-                                                                           defaultDisplayExifDropdown, mainFrame.getSortCriteria());
+      MediaFile mediaFile                  = getMediaFile(lowerCaseFileName, file, title, description, url, defaultDisplayExifDropdown,
+                                                          mainFrame.getSortCriteria());
 
       if (mediaFile != null)
       {
